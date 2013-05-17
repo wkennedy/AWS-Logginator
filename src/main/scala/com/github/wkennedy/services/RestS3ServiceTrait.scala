@@ -6,14 +6,11 @@ import org.jets3t.service.S3ServiceException
 import org.slf4j.LoggerFactory
 
 
-trait RestS3ServiceTrait {
+trait RestS3ServiceTrait extends CredentialTrait {
   val logger = LoggerFactory.getLogger(getClass)
 
-  def accessKey: String
-  def secretKey: String
-
   def RestS3Service(): RestS3Service = {
-    val awsCredentials = new AWSCredentials(accessKey, secretKey)
+    val awsCredentials = new AWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY)
     try {
       new RestS3Service(awsCredentials)
     } catch {
