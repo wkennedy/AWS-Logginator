@@ -30,7 +30,17 @@
                         Name</label>
 
                     <div class="controls">
-                        <input id="s3LogBucketPrefix" name="s3LogBucketPrefix" class="field" autofocus="autofocus"
+                        <input id="s3LogBucketPrefix" name="s3LogBucketPrefix" class="field"
+                               required="required" type="text"/>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="s3LogBucketArchive"><span class="required">*</span> S3 Log Bucket
+                        Archive Name</label>
+
+                    <div class="controls">
+                        <input id="s3LogBucketArchive" name="s3LogBucketArchive" class="field"
                                required="required" type="text"/>
                     </div>
                 </div>
@@ -47,15 +57,19 @@
     <div class="row-fluid">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Prefix</th>
-                </tr>
+            <tr>
+                <th>Name</th>
+                <th>Prefix</th>
+                <th>Archive</th>
+                <th>Action</th>
+            </tr>
             </thead>
             <tbody>
             <tr th:each="logBucket : ${logBuckets}">
                 <td th:text="${logBucket.bucketName}">name</td>
                 <td th:text="${logBucket.targetPrefix}">prefix</td>
+                <td th:text="${logBucket.archivePrefix}">archive</td>
+                <td><a th:value="@{'/deleteS3LogBucket/' + ${logBucket.bucketName}}" class="btn" id="deleteS3LogBucket" type="button" class="btn">Delete</a></td>
             </tr>
             </tbody>
         </table>
@@ -64,8 +78,22 @@
 
 <script type="text/javascript" th:inline="javascript">
     /*<![CDATA[*/
-//    $(document).ready(function () {
-//    });
+        $(document).ready(function () {
+            var url;
+            $('#deleteS3LogBucket').click(function() {
+                url = $('#deleteS3LogBucket').attr("value");
+                deleteS3LogBucket();
+            });
+
+            function deleteS3LogBucket() {
+                $.ajax({type: "DELETE", url:url, success:deleteSuccess});
+            }
+
+            function deleteSuccess() {
+                location.reload();
+            }
+        });
+
     /*]]>*/
 </script>
 </body>

@@ -4,8 +4,9 @@ import com.github.wkennedy.services.{Mapper, SimpleDBService}
 import org.slf4j.LoggerFactory
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
+import org.scalatra.MethodOverride
 
-class AwsLogginatorServlet extends AwslogginatorStack {
+class AwsLogginatorServlet extends AwslogginatorStack with MethodOverride {
 
   protected implicit val jsonFormats: Formats = DefaultFormats
 
@@ -39,12 +40,18 @@ class AwsLogginatorServlet extends AwslogginatorStack {
   post("/saveS3LogBucket") {
     val bucketName = params("s3LogBucketName")
     val targetPrefix = params("s3LogBucketPrefix")
+    val archive = params("s3LogBucketArchive")
 
     val simpleDBService = new SimpleDBService
-    simpleDBService.saveS3LogBucket(bucketName, targetPrefix)
+    simpleDBService.saveS3LogBucket(bucketName, targetPrefix, archive)
 
     contentType="text/html"
-    redirect("/createLogTables")
+    redirect("/addLogBucket")
+  }
+
+  delete("/deleteS3LogBucket/:name") {
+    val simpleDBService = new SimpleDBService
+    simpleDBService.deleteS3LogBucket(params("name"))
   }
 
 
