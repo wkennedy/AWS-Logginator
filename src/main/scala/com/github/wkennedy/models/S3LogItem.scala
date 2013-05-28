@@ -20,10 +20,18 @@ class S3LogItem {
    var userAgent: String = _
    var versionId: String = _
 
+  def prefix : String = {
+    if(key != null && !key.isEmpty && key.contains("/")) {
+      return key.substring(0, key.indexOf("/"))
+    }
+    "-"
+  }
+
   override def toString : String = {
     "LogItem" +
     "{bucketOwner=" + bucketOwner + 
-    ", bucket=" + bucket + 
+    ", bucket=" + bucket +
+    ", prefix=" + prefix +
     ", time=" + time + 
     ", remoteIP=" + remoteIP + 
     ", requester=" + requester + 

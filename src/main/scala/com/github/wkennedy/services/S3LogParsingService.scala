@@ -8,26 +8,25 @@ import java.text.{ParseException, SimpleDateFormat}
 import java.util.{Date, TimeZone}
 import scala.collection.mutable.ListBuffer
 
-class S3LogParsingService(aKey: String, sKey: String, logBucketName: String) extends RestS3ServiceTrait {
-  def logEntryPattern = """(\S+) (\S+) \[(.*?)\] (\S+) (\S+) (\S+) (\S+) (\S+) "?(.+?)"? (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) "?(.*?)"? "?(.*?)"? (\S+)""".r
-  val PREFIX = "logs/"
+class S3LogParsingService() extends RestS3ServiceTrait {
 
-  val accessKey: String = aKey
-  val secretKey: String = sKey
-  val logBucket: String = logBucketName
+  def logEntryPattern = """(\S+) (\S+) \[(.*?)\] (\S+) (\S+) (\S+) (\S+) (\S+) "(.+?)" (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) "(.*?)" "(.*?)" (\S)""".r
+  val DEFAULT_PREFIX = "logs/"
 
-  def getLogs: Array[S3LogItem] = {
+//  val logBucket: String = logBucketName
+
+  def getLogs(logBucket: String, prefix: String): Array[S3LogItem] = {
     //Get a list of all the files in the log bucket
     var logObjects: Array[S3Object] = null
     try {
-      logObjects = RestS3Service().listObjects(logBucket, PREFIX, null)
+      logObjects = RestS3Service().listObjects(logBucket, prefix, null)
     } catch {
       case e: S3ServiceException => logger.error("Error getting list objects from bucket", e)
         return new Array[S3LogItem](0)
     }
 
     //Filter the lines in the log files and populate the list of LogItem objects
-    val logItems = populateLogItems(logObjects)
+    val logItems = populateLogItems(logBucket, logObjects)
     logger.info("Parsed the following entries from the logs:")
     logItems.foreach(logItem => logger.info(logItem.toString))
 
@@ -39,7 +38,7 @@ class S3LogParsingService(aKey: String, sKey: String, logBucketName: String) ext
     logItems
   }
 
-  def populateLogItems(logObjects: Array[S3Object]): Array[S3LogItem] = {
+  def populateLogItems(logBucket: String, logObjects: Array[S3Object]): Array[S3LogItem] = {
     val listBuffer = new ListBuffer[S3LogItem]
     var count: Int = 1
     for (logObject <- logObjects) {

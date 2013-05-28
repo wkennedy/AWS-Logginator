@@ -7,15 +7,16 @@ import org.slf4j.LoggerFactory
 import scala.InterruptedException
 import com.amazonaws.AmazonServiceException
 
-class InitDynamoDBTables extends CredentialTrait {
+class DynamoDBService extends CredentialTrait {
+  {
+    val credentials = new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY)
+    dynamoDBClient = new AmazonDynamoDBClient(credentials)
+  }
   val logger = LoggerFactory.getLogger(getClass)
 
   var dynamoDBClient: AmazonDynamoDBClient = _
 
   def createDynamobDBLogEntryTable(tableName: String) {
-    val credentials = new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY)
-    dynamoDBClient = new AmazonDynamoDBClient(credentials)
-
     if (!isLogEntryTableCreated(tableName)) {
       createLogEntryTable(tableName)
     }
