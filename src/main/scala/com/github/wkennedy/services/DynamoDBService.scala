@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodb.model._
 import org.slf4j.LoggerFactory
 import scala.InterruptedException
 import com.amazonaws.AmazonServiceException
+import com.github.wkennedy.models.S3LogItem
 
 class DynamoDBService extends CredentialTrait {
   {
@@ -73,6 +74,13 @@ class DynamoDBService extends CredentialTrait {
     }
 
     throw new RuntimeException("Table " + tableName + " never became active")
+  }
+
+  def getS3LogItems : Array[S3LogItem] = {
+    val scanRequest = new ScanRequest("aws-logginator-s3-logs")
+    val scanResult = dynamoDBClient.scan(scanRequest)
+    val mapper = new Mapper()
+    mapper.mapToS3LogItem(scanResult)
   }
 
 }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:substituteby="/includes :: head"></head>
+
+<body>
+
+<div th:substituteby="/includes :: nav_bar"></div>
+
+<div class="container">
+
+    <div class="row-fluid">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Bucket</th>
+                <th>Prefix</th>
+                <th>Time</th>
+                <th>Remote IP</th>
+                <th>Requester</th>
+                <th>Requester ID</th>
+                <th>Operation</th>
+                <th>Key</th>
+                <th>Request URI</th>
+                <th>HTTP Status</th>
+                <th>Error Code</th>
+                <th>Bytes Sent</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="s3LogItem : ${s3LogItems}">
+                <td th:text="${s3LogItem.bucket}">bucket</td>
+                <td th:text="${s3LogItem.prefix}">prefix</td>
+                <td th:text="${s3LogItem.time}">time</td>
+                <td th:text="${s3LogItem.remoteIP}">Remote IP</td>
+                <td th:text="${s3LogItem.requester}">Requester</td>
+                <td th:text="${s3LogItem.requesterId}">Requester</td>
+                <td th:text="${s3LogItem.operation}">Requester</td>
+                <td th:text="${s3LogItem.key}">Requester</td>
+                <td th:text="${s3LogItem.requestUri}">Requester</td>
+                <td th:text="${s3LogItem.httpStatus}">Requester</td>
+                <td th:text="${s3LogItem.errorCode}">Requester</td>
+                <td th:text="${s3LogItem.bytesSent}">Requester</td>
+                <!--<td><a th:value="@{'/logBucket/deleteS3LogBucket/' + ${logBucket.bucketName}}" class="btn" id="deleteS3LogBucket" type="button" class="btn">Delete</a></td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

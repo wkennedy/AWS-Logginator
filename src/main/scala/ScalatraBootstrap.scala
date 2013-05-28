@@ -17,11 +17,12 @@ class ScalatraBootstrap extends LifeCycle {
   val dynamoDBService = new DynamoDBService()
 
   override def init(context: ServletContext) {
-//    System.setProperty("awsAccessKey", "")
-//    System.setProperty("awsSecretKey", "")
+    System.setProperty("awsAccessKey", "AKIAJ5KSEFHFPQYFMLHA")
+    System.setProperty("awsSecretKey", "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")
 
     context.mount(new AwsLogginatorServlet, "/*")
     context.mount(new LogBucketServlet, "/logBucket")
+    context.mount(new S3LogItemsServlet, "/s3LogItems")
 
     dynamoDBService.createDynamobDBLogEntryTable("aws-logginator-s3-logs")
     simpleDBService.createSimpleDBDomain("S3LogBuckets")
