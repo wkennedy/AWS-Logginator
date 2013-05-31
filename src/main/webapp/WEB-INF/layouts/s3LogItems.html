@@ -10,8 +10,12 @@
 
 <div class="container">
 
+    <div class="span10">
+
+    <div class="content-wrap">
+        <div class="container-fluid">
     <div class="row-fluid">
-        <table class="table table-striped">
+        <table id="display-data" cellpadding="0" cellspacing="0" border="0" class="table">
             <thead>
             <tr>
                 <th>Bucket</th>
@@ -47,6 +51,22 @@
             </tbody>
         </table>
     </div>
+            </div></div>      </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('table').dataTable( {
+                "sDom": "<'table-inline'<<'span6'l><'pull-right'f>r>t<<'span6'i><'pull-right'p>>>",
+                "sPaginationType": "bootstrap",
+                "oLanguage": {
+                    "sLengthMenu": "_MENU_ records per page"
+                },
+                "sScrollX": "100%",
+                "sScrollXInner": "110%",
+                "bScrollCollapse": true
+            });
+        });
+    </script>
 
 </div>
 </body>
